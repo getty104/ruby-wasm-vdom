@@ -62,7 +62,7 @@ You can also write vdom with like jsx signature with `DomParser`
       }
 
       view = ->(state, actions) {
-        eval DomParser.parse(<<-DOM)
+        eval RubyWasmVdom::DomParser.parse(<<-DOM)
           <div>
             <button onclick='{->(e) { actions[:increment].call(state, nil) } }'>Click me!</button>
             <p>{"Count is #{state[:count]}"}</p>
