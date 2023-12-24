@@ -1,0 +1,36 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="https://getty104.github.io/ruby-wasm-vdom/index.js"></script>
+    <script type="text/ruby">
+      state = {
+        count: 0,
+      }
+
+      actions = {
+        increment: ->(state, value) {
+        state[:count] += 1
+        }
+      }
+
+      view = ->(state, actions) {
+        eval DomParser.parse(<<-DOM)
+          <div>
+            <button onclick='{->(e) { actions[:increment].call(state, nil) } }'>Click me!</button>
+            <p>{"Count is #{state[:count]}"}</p>
+          </div>
+        DOM
+      }
+
+      RubyWasmVdom::Router.define({
+        "/demo": {
+          view: view,
+          state: state,
+          actions: actions,
+        },
+      })
+    </script>
+  </body>
+</html>
