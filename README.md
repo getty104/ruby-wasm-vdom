@@ -30,7 +30,7 @@ You can use this library by adding the following to your html file.
         ])
       }
 
-      App.new(
+      RubyWasmVdom::App.new(
         el: "#app",
         state:,
         view:,
@@ -70,7 +70,7 @@ You can also write vdom with like jsx signature with `DomParser`
         DOM
       }
 
-      App.new(
+      RubyWasmVdom::App.new(
         el: "#app",
         state:,
         view:,
