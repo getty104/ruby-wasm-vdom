@@ -37,17 +37,19 @@ module RubyWasmVdom
       end
     end
 
+    # Return -1 if the current_node is deleted.
+    # Return 0 otherwise.
     def update_element(parent_node, current_node_obj, new_node_obj, current_node_index = 0)
       unless current_node_obj
         parent_node.appendChild(create_element(new_node_obj))
-        return
+        return 0
       end
 
       current_node = parent_node[:childNodes][current_node_index]
 
       unless new_node_obj
         parent_node.removeChild(current_node)
-        return
+        return -1
       end
 
       change_type = change_type(current_node_obj, new_node_obj)
@@ -68,19 +70,23 @@ module RubyWasmVdom
         )
       end
 
-      return unless v_node?(current_node_obj) && v_node?(new_node_obj)
+      return 0 unless v_node?(current_node_obj) && v_node?(new_node_obj)
 
+      shift = 0
       [current_node_obj[:children].size, new_node_obj[:children].size].max.times do |i|
         current_node_child_obj = i < current_node_obj[:children].size ? current_node_obj[:children][i] : nil
         new_node_child_obj = i < new_node_obj[:children].size ? new_node_obj[:children][i] : nil
 
-        update_element(
+        # When the current_node is deleted, the next index have to be shifted.
+        shift += update_element(
           current_node,
           current_node_child_obj,
           new_node_child_obj,
-          i
+          i + shift
         )
       end
+
+      0
     end
 
     def update_attributes(target_node, current_attributes, new_attributes)
